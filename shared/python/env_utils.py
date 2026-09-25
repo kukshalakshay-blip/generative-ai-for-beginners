@@ -8,6 +8,16 @@ variables, ensuring that sensitive configuration is properly handled.
 import os
 
 
+def _get_env_value(var_name: str) -> str | None:
+    """Return a trimmed environment value or None if it is unset/blank."""
+    value = os.getenv(var_name)
+    if value is None:
+        return None
+
+    value = value.strip()
+    return value or None
+
+
 def get_required_env(var_name: str, description: str | None = None) -> str:
     """
     Get a required environment variable or raise an error with helpful message.
@@ -25,7 +35,7 @@ def get_required_env(var_name: str, description: str | None = None) -> str:
     Example:
         >>> api_key = get_required_env("OPENAI_API_KEY", "OpenAI API authentication")
     """
-    value = os.getenv(var_name)
+    value = _get_env_value(var_name)
     if not value:
         desc_part = f" ({description})" if description else ""
         raise ValueError(
@@ -56,7 +66,7 @@ def validate_env_vars(*var_names: str) -> dict[str, str]:
     values = {}
 
     for var_name in var_names:
-        value = os.getenv(var_name)
+        value = _get_env_value(var_name)
         if not value:
             missing.append(var_name)
         else:
@@ -85,4 +95,5 @@ def get_env_with_default(var_name: str, default: str) -> str:
     Example:
         >>> model = get_env_with_default("MODEL_NAME", "gpt-4o")
     """
-    return os.getenv(var_name, default)
+    value = _get_env_value(var_name)
+    return value if value is not None else default
