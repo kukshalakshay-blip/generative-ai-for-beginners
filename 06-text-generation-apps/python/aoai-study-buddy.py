@@ -7,11 +7,11 @@ load_dotenv()
 
 # configure the OpenAI client against the Azure OpenAI (Microsoft Foundry) v1 endpoint
 client = OpenAI(
-  api_key=os.environ['AZURE_OPENAI_API_KEY'],  
-  base_url=f"{os.environ['AZURE_OPENAI_ENDPOINT'].rstrip('/')}/openai/v1/",
+  api_key=os.environ['AZURE_INFERENCE_CREDENTIAL'],  
+  base_url=f"{os.environ['AZURE_INFERENCE_ENDPOINT'].rstrip('/')}/openai/v1/",
   )
 
-deployment=os.environ['AZURE_OPENAI_DEPLOYMENT']
+deployment=os.environ['AZURE_INFERENCE_CHAT_MODEL']
 
 # add your completion code
 question = input("Ask your questions on python language to your study buddy: ")
